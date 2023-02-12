@@ -75,7 +75,7 @@ else
 fi
 
 # make sure the github-action has the required packages.
-cd GH_ACTION_DIR
+cd $GH_ACTION_DIR
 composer install
 
 # Go up one dir. Only way to proper to make sure ZIP uses the correct directory.
