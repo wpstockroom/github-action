@@ -1,0 +1,12 @@
+name: 'Stockroom deployment'
+description: 'Deploy WP theme/plugin to a self hosted Stockroom'
+author: 'wpstockroom'
+branding:
+  icon: 'package'
+  color: 'green'
+runs:
+  using: 'composite'
+  steps:
+    - id: deployment
+      run: ${{ github.action_path }}/deploy.sh
+      shell: bash
