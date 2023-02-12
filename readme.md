@@ -24,7 +24,7 @@ jobs:
           npm run build
           composer install
       - name: Plugin Deploy on Stockroom
-        uses: wpstockroom/github-action@stable
+        uses: wpstockroom/github-action@main
         env:
           STOCKROOM_URL: ${{ secrets.STOCKROOM_URL }}   # Required, the url to the Stockroom ie. https://wpstockroom.com  
           STOCKROOM_USER: ${{ secrets.STOCKROOM_USER }} # Required, an existing WP user on the STOCKROOM_URL site. Should have editor permissions.

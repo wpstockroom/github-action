@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 # Directory to self https://stackoverflow.com/a/246128/933065
-SELF_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-
-# make sure the github-action has the required packages.
-composer install
+GH_ACTION_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 if [[ -z "${STOCKROOM_URL}" ]]; then
   echo "Set the STOCKROOM_URL in your github secret"
@@ -77,6 +74,10 @@ else
   echo "No .distignore file found. Including everything in the zip."
 fi
 
+# make sure the github-action has the required packages.
+cd GH_ACTION_DIR
+composer install
+
 # Go up one dir. Only way to proper to make sure ZIP uses the correct directory.
 cd "${BUILD_DIR}/../"
 
@@ -86,4 +87,4 @@ zip -r -q ${ZIP_FILE} ./$( basename ${BUILD_DIR}) ${ZIP_EXCLUDES}
 set +o noglob # the `*` at the end of directories kept expanding.
 echo "Created zip file in ${ZIP_FILE}"
 
-$SELF_PATH/deploy.php "${STOCKROOM_URL}" "${STOCKROOM_USER}" "${STOCKROOM_PASS}" "${VERSION}" -s "${SLUG}" -z "${ZIP_FILE}" -r "${README_FILE}"
+$GH_ACTION_DIR/deploy.php "${STOCKROOM_URL}" "${STOCKROOM_USER}" "${STOCKROOM_PASS}" "${VERSION}" -s "${SLUG}" -z "${ZIP_FILE}" -r "${README_FILE}"
