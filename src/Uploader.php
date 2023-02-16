@@ -2,9 +2,7 @@
 
 namespace WP_Stockroom;
 
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\Mime\Part\DataPart;
-use Symfony\Component\Mime\Part\Multipart\FormDataPart;
+use GuzzleHttp\Client;
 
 class Uploader {
 
@@ -37,80 +35,68 @@ class Uploader {
 	}
 
 	public function run() {
-		// Set meta type.
-
-		// upload txt && set parent
-		$this->uploadReadme();
-
-		// upload zip && set parent
-		$this->uploadZip();
-	}
-
-	/**
-	 * Upload the readme File.
-	 *
-	 * @return void
-	 * @throws \Exception
-	 */
-	protected function uploadReadme() {
-		$filename           = "{$this->slug}-readme.txt";
-		$this->readmeFileId = $this->uploadFile( $this->readmeFile, $filename );
-	}
-
-	protected function uploadZip() {
-		$filename        = basename( $this->zipFile );
-		$this->fileZipId = $this->uploadFile( $this->zipFile, $filename );
-	}
-
-	/**
-	 * Upload a file. Then connect it to the parent.
-	 *
-	 * @param string      $filePath
-	 * @param string|null $filename
-	 *
-	 * @return int
-	 * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-	 * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-	 * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-	 * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-	 */
-	protected function uploadFile( string $filePath, string $filename = null ): int {
-		if ( null === $filename ) {
-			$filename = basename( $filePath );
-		}
-
-		$response = HttpClient::create()->request( 'POST',
-			$this->url . 'wp-json/wp/v2/media',
-			[
-				'auth_basic'  => [ $this->username, $this->password ],
-				'verify_peer' => ( $this->url !== 'https://repository.lndo.site/' ), // Only for local debugging.
-				'headers'     => [ 'Content-Disposition' => 'form-data; filename="' . $filename . '"', ],
-				'body'        => file_get_contents( $filePath ),
-			]
-		);
-
-		$content = json_decode( $response->getContent() );
-
-		if ( empty( $content->id ) ) {
-			throw new \Exception( 'Unknown error while getting the page.' );
-		}
-
-		$mediaId = $content->id;
-
-		// Connect readme to the page.
-		$response = HttpClient::create()->request( 'PATCH',
-			$this->url . 'wp-json/wp/v2/media/' . $mediaId,
-			[
-				'auth_basic'  => [ $this->username, $this->password ],
-				'verify_peer' => ( $this->url !== 'https://repository.lndo.site/' ), // Only for local debugging.
-				'body'        => [
-					'package' => $this->slug,
-					'version' => $this->version,
+		// Readme
+		try {
+			$client   = new Client();
+			$response = $client->request( 'POST', $this->url . 'wp-json/wp/v2/media', [
+				'multipart' => [
+					[
+						'name'     => 'title',
+						'contents' => 'readmeeeee',
+					],
+					[
+						'name'     => 'package',
+						'contents' => $this->slug,
+					],
+					[
+						'name'     => 'version',
+						'contents' => $this->version,
+					],
+					[
+						'name'     => 'file',
+						'contents' => file_get_contents( $this->readmeFile ),
+						'filename' => basename( $this->readmeFile ),
+					],
 				],
-			]
-		);
+				'auth'      => [ $this->username, $this->password ],
+			] );
+			echo $response->getBody()->getContents();
+		} catch ( \GuzzleHttp\Exception\ClientException $e ) {
+			$response             = $e->getResponse();
+			$responseBodyAsString = $response->getBody()->getContents();
+		}
 
-		return $mediaId;
+		// ZIP
+		try {
+			$client   = new Client();
+			$response = $client->request( 'POST', $this->url . 'wp-json/wp/v2/media', [
+				'multipart' => [
+					[
+						'name'     => 'title',
+						'contents' => 'readmeeeee',
+					],
+					[
+						'name'     => 'package',
+						'contents' => $this->slug,
+					],
+					[
+						'name'     => 'version',
+						'contents' => $this->version,
+					],
+					[
+						'name'     => 'file',
+						'contents' => file_get_contents( $this->readmeFile ),
+						'filename' => basename( $this->readmeFile ),
+					],
+				],
+				'auth'      => [ $this->username, $this->password ],
+			] );
+			echo $response->getBody()->getContents();
+		} catch ( \GuzzleHttp\Exception\ClientException $e ) {
+			$response             = $e->getResponse();
+			$responseBodyAsString = $response->getBody()->getContents();
+		}
 	}
+
 }
 
