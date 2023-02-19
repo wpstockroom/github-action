@@ -56,7 +56,25 @@ class Command extends Symfony_Command {
 		);
 
 		try {
-			$uploader->run();
+			$success_json  = $uploader->run();
+		} catch ( \GuzzleHttp\Exception\GuzzleException $e ) {
+			$response      = $e->getResponse();
+			$rest_response = json_decode( $response->getBody()->getContents() );
+			$error         = [
+				"<error>",
+				'An error occurred while uploading.',
+				$rest_response->message,
+			];
+			if ( !empty($rest_response->additional_errors) ) {
+				foreach ( $rest_response->additional_errors as $additional_error ) {
+					$error[] = " - {$additional_error->message}";
+				}
+			}
+
+			$error[] = '</error>';
+			$output->writeln( $error );
+
+			return Symfony_Command::FAILURE;
 		} catch ( \Exception $exception ) {
 			$output->writeln( [
 				"<error>An error occured while uploading.</error>",
@@ -66,6 +84,10 @@ class Command extends Symfony_Command {
 			return Symfony_Command::FAILURE;
 		}
 
+		// Just noise in the output.
+		unset($success_json->_links);
+
+		echo var_export($success_json) . "\n";
 		return Symfony_Command::SUCCESS;
 	}
 }
