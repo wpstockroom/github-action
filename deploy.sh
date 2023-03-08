@@ -23,6 +23,8 @@ fi
 
 if [[ -z "${BUILD_DIR}" ]]; then
   BUILD_DIR=$(pwd)
+else
+  BUILD_DIR=$(pwd)/${BUILD_DIR}
 fi
 BUILD_DIR=${BUILD_DIR%/} # Strip trailing slash, always.
 
