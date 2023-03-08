@@ -90,6 +90,7 @@ zip -r -q ${ZIP_FILE} ./$( basename ${BUILD_DIR}) ${ZIP_EXCLUDES}
 set +o noglob # the `*` at the end of directories kept expanding.
 echo "Created zip file in ${ZIP_FILE}"
 
-echo "zip-path=${ZIP_FILE}" >> "${GITHUB_OUTPUT}"
+#echo "zip-path=${ZIP_FILE}" >> "${GITHUB_OUTPUT}"
+echo "zip-path=aaaaaaaaa" >> "${GITHUB_OUTPUT}"
 
 $GH_ACTION_DIR/deploy.php "${STOCKROOM_URL}" "${STOCKROOM_USER}" "${STOCKROOM_PASS}" "${VERSION}" -s "${SLUG}" -z "${ZIP_FILE}" -r "${README_FILE}"
