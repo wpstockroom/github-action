@@ -4,6 +4,10 @@ author: 'wpstockroom'
 branding:
   icon: 'package'
   color: 'green'
+outputs:
+  zip-path:
+    description: 'Path to zip file'
+    value: ${{ steps.deploy.outputs.zip-path }}
 runs:
   using: 'composite'
   steps:
