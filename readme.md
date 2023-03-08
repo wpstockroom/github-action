@@ -14,7 +14,7 @@ on:
     types: [published]
 jobs:
   release:
-    name: Deploy new Release
+    name: Build and Deploy new Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -24,7 +24,12 @@ jobs:
           npm run build
           composer install
       - name: Plugin Deploy on Stockroom
+        id: stockroom_deploy
         uses: wpstockroom/github-action@main
+        outputs:
+          zip-path:
+            description: 'Path to zip file'
+            value: ${{ steps.stockroom_deploy.outputs.zip-path }}
         env:
           STOCKROOM_URL: ${{ secrets.STOCKROOM_URL }}   # Required, the url to the Stockroom ie. https://wpstockroom.com  
           STOCKROOM_USER: ${{ secrets.STOCKROOM_USER }} # Required, an existing WP user on the STOCKROOM_URL site. Should have editor permissions.
@@ -36,7 +41,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/*.zip
+          file: ${{ steps.stockroom_deploy.outputs.zip-path }}
           file_glob: true
           tag: ${{ github.ref }}
           overwrite: true
