@@ -7,7 +7,7 @@ branding:
 outputs:
   zip-path:
     description: 'Path to zip file'
-    value: ${{ steps.deploy.outputs.zip-path }}
+    value: ${{ steps.deployment.outputs.zip-path }}
 runs:
   using: 'composite'
   steps:
