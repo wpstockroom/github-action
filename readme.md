@@ -31,6 +31,15 @@ jobs:
           STOCKROOM_PASS: ${{ secrets.STOCKROOM_PASS }} # Required, an application password, please use separate passwords per theme/plugin.
           BUILD_DIR: the-actual_dir                     # optional, when the actual theme/plugin not in the repo root, but in a subdirectory. 
           SLUG: my-super-cool-plugin                    # optional, remove if GitHub repo name matches WP Stockroom slug, including capitalization
+
+      - name: Attach zip file to release page # Delete this step if you don't want to have a build zip attached.
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}/*.zip
+          file_glob: true
+          tag: ${{ github.ref }}
+          overwrite: true
 ```
 
 Add the following [Github secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to the repository.
