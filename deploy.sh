@@ -84,6 +84,12 @@ composer install
 # Go up one dir. Only way to proper to make sure ZIP uses the correct directory.
 cd "${BUILD_DIR}/../"
 
+# Should the plugin dir be renamed?
+if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
+  echo "Rename the build dir to the slug '${SLUG}'".
+  mv "${BUILD_DIR}" "$(dirname ${BUILD_DIR})/${SLUG}"
+fi
+
 # Finally zip it up.
 set -o noglob #https://stackoverflow.com/a/11456496/933065
 zip -r -q ${ZIP_FILE} ./$( basename ${BUILD_DIR}) ${ZIP_EXCLUDES}
