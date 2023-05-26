@@ -104,6 +104,10 @@ else
   zip -r -q ${ZIP_FILE} ./$( basename ${BUILD_DIR}) ${ZIP_EXCLUDES}
 fi
 
+# Make sure the zip is also present in the original build dir.
+# This might be used by followup scripts.
+cp ${ZIP_FILE} ${BUILD_DIR}
+
 set +o noglob # the `*` at the end of directories kept expanding.
 echo "Created zip file in ${ZIP_FILE}"
 
