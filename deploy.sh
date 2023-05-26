@@ -95,6 +95,7 @@ if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
   ls -hals
   pwd
 
+  echo "zip -r -q ${ZIP_FILE} ./${SLUG} ${ZIP_EXCLUDES}"
   zip -r -q ${ZIP_FILE} ./${SLUG} ${ZIP_EXCLUDES}
 
   # Restore the original folder name.
