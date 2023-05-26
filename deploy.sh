@@ -92,7 +92,7 @@ if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
   echo "Rename the build dir to the slug '${SLUG}'".
   mv "${BUILD_DIR}" "$(dirname ${BUILD_DIR})/${SLUG}"
 
-  zip -r -q ${ZIP_FILE} ./${SLUG} ${ZIP_EXCLUDES}
+  zip -r -q ${ZIP_FILE} "$(dirname ${BUILD_DIR})/${SLUG}" ${ZIP_EXCLUDES}
 
   # Restore the original folder name.
   mv "$(dirname ${BUILD_DIR})/${SLUG}" "${BUILD_DIR}"
