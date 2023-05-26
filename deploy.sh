@@ -54,7 +54,7 @@ fi
 README_FILE="${BUILD_DIR}/readme.txt"
 
 # Full path to the zip file.
-ZIP_FILE="${BUILD_DIR}/${SLUG}.${VERSION}.zip"
+ZIP_FILE="$(dirname ${BUILD_DIR})/${SLUG}.${VERSION}.zip"
 
 # Build the list of excludes.
 
