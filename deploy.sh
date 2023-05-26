@@ -95,7 +95,7 @@ if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
   ls -hals
   pwd
 
-  zip -r -q ${ZIP_FILE} "$(dirname ${BUILD_DIR})/${SLUG}" ${ZIP_EXCLUDES}
+  zip -r -q ${ZIP_FILE} ./${SLUG} ${ZIP_EXCLUDES}
 
   # Restore the original folder name.
   mv "$(dirname ${BUILD_DIR})/${SLUG}" "${BUILD_DIR}"
