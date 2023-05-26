@@ -33,6 +33,15 @@ BUILD_DIR=${BUILD_DIR%/} # Strip trailing slash, always.
 echo "BUILD_DIR is ${BUILD_DIR}"
 echo "SLUG is ${SLUG}"
 
+# Should the plugin dir be renamed?
+if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
+  mv "${BUILD_DIR}"
+  # Set the new build dir.
+  BUILD_DIR="$(dirname ${BUILD_DIR})/${SLUG}"
+  echo "Renamed the build dir to the slug '${SLUG}'".
+  echo "The new BUILD_DIR is ${BUILD_DIR}"
+fi
+
 # Determine the version.
 if [[ -f "${BUILD_DIR}/style.css" ]]; then
   VERSION=$(grep  'Version:.*' "${BUILD_DIR}/style.css" | sed -E "s/.* ([.0-9])/\\1/")
@@ -83,12 +92,6 @@ composer install
 
 # Go up one dir. Only way to proper to make sure ZIP uses the correct directory.
 cd "${BUILD_DIR}/../"
-
-# Should the plugin dir be renamed?
-if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
-  echo "Rename the build dir to the slug '${SLUG}'".
-  mv "${BUILD_DIR}" "$(dirname ${BUILD_DIR})/${SLUG}"
-fi
 
 # Finally zip it up.
 set -o noglob #https://stackoverflow.com/a/11456496/933065
