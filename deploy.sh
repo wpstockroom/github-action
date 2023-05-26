@@ -35,7 +35,7 @@ echo "SLUG is ${SLUG}"
 
 # Should the plugin dir be renamed?
 if [[ ""$(basename ${BUILD_DIR})" !== "${SLUG}"" ]]; then
-  mv "${BUILD_DIR}"
+  mv "${BUILD_DIR}" "$(dirname ${BUILD_DIR})/${SLUG}"
   # Set the new build dir.
   BUILD_DIR="$(dirname ${BUILD_DIR})/${SLUG}"
   echo "Renamed the build dir to the slug '${SLUG}'".
